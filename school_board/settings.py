@@ -37,8 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'authentication',
+    'library',
+    'django_filters',
+    'drf_spectacular',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,7 +58,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'library.middleware.middlewares.input_middleware',
+    'library.middleware.middlewares.output_middleware',
+] #server starts bottom to top but django will hit the input middleware in request
 
 ROOT_URLCONF = 'school_board.urls'
 
@@ -68,17 +81,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'school_board.wsgi.application'
 
+#todo ilk bir tanesine girsin print attir daha sonra request object icerisine bir parametre koy ve en sonda da o parametreyi printle bastir, en sonda da bastir,
+# view girmeden once bir middleware koy bir parametre eklesin daha sonra view e gitsin daha sonra view sonrasi bir middleware daha koy orada da guncelle mesela onu
+#todo exception serializer
+
+
+
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'school_board',
+        'USER': 'efetopalak',
+        'PASSWORD': '123123123',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -115,3 +137,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = 'authentication.User'  #built in tool
